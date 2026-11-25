@@ -11,8 +11,6 @@
   </p>
 </div>
 
-![VoidCode desktop](.github/assets/voidcode-desktop.svg)
-
 VoidCode is a focused rebuild of the OpenCode desktop experience: a dark, distraction-free workspace for talking to AI about code, inspecting changes, and keeping everything on your machine. The Windows installer ships with the CLI/server compiled into a standalone executable, so a clean PC can run it with a double-click.
 
 ## Highlights
@@ -23,6 +21,12 @@ VoidCode is a focused rebuild of the OpenCode desktop experience: a dark, distra
 - **Customization** — accent, surface, density, and glass tokens with persisted preferences.
 - **VoidCode theme** — default dark theme with a compact timeline, quiet tool rows, and scoped styling.
 - **Clear onboarding** — a short welcome screen instead of a wall of setup steps.
+
+## Screenshots
+
+Captured from the packaged Windows build.
+
+![VoidCode desktop](.github/assets/voidcode-app-real.png)
 
 ![VoidCode terminal](.github/assets/voidcode-terminal.png)
 
