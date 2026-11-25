@@ -1,0 +1,38 @@
+/* VoidCode Studio and Privacy Shield controls. */
+.voidcode-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 260px);
+}
+
+.voidcode-slider input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  height: 3px;
+  accent-color: var(--voidcode-gradient-solid, #c2cad9);
+  cursor: pointer;
+}
+
+.voidcode-slider span {
+  min-width: 42px;
+  color: var(--v2-text-text-muted);
+  font-size: 12px;
+  line-height: var(--line-height-compact);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.voidcode-privacy-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--v2-state-border-success);
+  background: var(--v2-state-bg-success);
+  color: var(--v2-state-fg-success);
+  font-size: 12px;
+  line-height: var(--line-height-compact);
+}

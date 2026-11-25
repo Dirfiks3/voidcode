@@ -1,0 +1,499 @@
+/*
+  VoidCode design layer.
+
+  The runtime theme injects an unlayered `#oc-theme` style after the bundled stylesheet, so every
+  override here is scoped to `:root[data-theme="voidcode"]` and wins on specificity rather than order.
+
+  Accent, surface, glass and density values are set on the root element by the VoidCode preferences
+  store. The fallbacks below keep Storybook and unhydrated first paint coherent.
+*/
+
+:root[data-theme="voidcode"] {
+  color-scheme: dark;
+
+  --voidcode-void: #000000;
+  --voidcode-panel: #030305;
+  --voidcode-card: #08090c;
+  --voidcode-glass-border: rgba(255, 255, 255, 0.08);
+  --voidcode-glass-highlight: rgba(255, 255, 255, 0.035);
+  --voidcode-glass-alpha: 0.04;
+  --voidcode-accent-a: #e8edf5;
+  --voidcode-accent-b: #98a4b5;
+  --voidcode-gradient: linear-gradient(135deg, var(--voidcode-accent-a) 0%, var(--voidcode-accent-b) 100%);
+  --voidcode-gradient-solid: var(--voidcode-accent-a);
+  --voidcode-radius: 14px;
+  --voidcode-blur: blur(16px);
+  --voidcode-chat-size: 14px;
+  --voidcode-panel-shadow:
+    inset 0 1px 0 0 var(--voidcode-glass-highlight),
+    0 8px 32px 0 rgba(0, 0, 0, 0.5);
+
+  --v2-background-bg-base: var(--voidcode-void);
+  --v2-background-bg-deep: var(--voidcode-void);
+  --v2-background-bg-layer-01: var(--voidcode-panel);
+  --v2-background-bg-layer-02: var(--voidcode-card);
+  --v2-background-bg-layer-03: #12151b;
+  --v2-background-bg-layer-04: #191d25;
+  --v2-background-bg-button-neutral: var(--voidcode-card);
+
+  --v2-text-text-base: #e7ebf2;
+  --v2-text-text-muted: #a3adbd;
+  --v2-text-text-faint: #6f7889;
+  --v2-text-text-accent: var(--voidcode-accent-a);
+  --v2-text-text-accent-hover: #ffffff;
+  --v2-text-text-contrast: #050507;
+  --v2-text-text-inverse: #050507;
+
+  --v2-icon-icon-base: #c2cad9;
+  --v2-icon-icon-muted: #828da3;
+  --v2-icon-icon-faint: #5d667a;
+  --v2-icon-icon-accent: var(--voidcode-accent-a);
+  --v2-icon-icon-contrast: #050507;
+
+  --v2-border-border-muted: var(--voidcode-glass-border);
+  --v2-border-border-base: rgba(255, 255, 255, 0.11);
+  --v2-border-border-strong: rgba(255, 255, 255, 0.2);
+  --v2-border-border-focus: var(--voidcode-gradient-solid);
+
+  --v2-overlay-simple-overlay-hover: rgba(255, 255, 255, 0.05);
+  --v2-overlay-simple-overlay-pressed: rgba(255, 255, 255, 0.09);
+  --v2-overlay-simple-overlay-scrim: rgba(0, 0, 0, 0.76);
+  --v2-overlay-gradient-depth-overlay-depth-top: rgba(255, 255, 255, 0.025);
+  --v2-overlay-gradient-depth-overlay-depth-bot: rgba(255, 255, 255, 0);
+  --v2-overlay-simple-tab-active-scrim: rgba(255, 255, 255, 0.08);
+  --v2-overlay-simple-tab-hover-scrim: rgba(255, 255, 255, 0.035);
+  --v2-overlay-simple-tab-scrim: rgba(255, 255, 255, 0);
+
+  --v2-state-bg-success: rgba(70, 210, 145, 0.1);
+  --v2-state-fg-success: #6ee7a8;
+  --v2-state-border-success: rgba(70, 210, 145, 0.24);
+  --v2-state-bg-warning: rgba(244, 190, 80, 0.1);
+  --v2-state-fg-warning: #f4be50;
+  --v2-state-border-warning: rgba(244, 190, 80, 0.24);
+  --v2-state-bg-danger: rgba(255, 105, 120, 0.1);
+  --v2-state-fg-danger: #ff8a96;
+  --v2-state-border-danger: rgba(255, 105, 120, 0.24);
+  --v2-state-bg-info: rgba(200, 215, 240, 0.1);
+  --v2-state-fg-info: #c8d7f0;
+  --v2-state-border-info: rgba(200, 215, 240, 0.24);
+
+  --v2-elevation-raised:
+    inset 0 1px 0 0 var(--voidcode-glass-highlight),
+    0 0 0 0.5px var(--voidcode-glass-border),
+    0 2px 8px 0 rgba(0, 0, 0, 0.4);
+  --v2-elevation-floating:
+    inset 0 1px 0 0 var(--voidcode-glass-highlight),
+    0 0 0 0.5px var(--voidcode-glass-border),
+    0 8px 24px 0 rgba(0, 0, 0, 0.56);
+  --v2-elevation-overlay:
+    inset 0 1px 0 0 var(--voidcode-glass-highlight),
+    0 0 0 0.5px var(--voidcode-glass-border),
+    0 16px 48px 0 rgba(0, 0, 0, 0.7);
+  --v2-elevation-input:
+    inset 0 1px 0 0 var(--voidcode-glass-highlight),
+    0 0 0 0.5px var(--voidcode-glass-border);
+}
+
+:root[data-theme="voidcode"] body {
+  background-color: var(--voidcode-void);
+}
+
+/* One compositing layer, one painted sheen. Nothing here pulses. */
+:root[data-theme="voidcode"] [data-voidcode-glass] {
+  position: relative;
+  background-color: color-mix(in srgb, var(--voidcode-panel) calc(var(--voidcode-glass-alpha) * 100%), transparent);
+  border: 1px solid var(--voidcode-glass-border);
+  border-radius: var(--voidcode-radius);
+  box-shadow: var(--voidcode-panel-shadow);
+  backdrop-filter: var(--voidcode-blur);
+  -webkit-backdrop-filter: var(--voidcode-blur);
+}
+
+:root[data-theme="voidcode"] [data-voidcode-card] {
+  background-color: var(--voidcode-card);
+  border: 1px solid var(--voidcode-glass-border);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 0 var(--voidcode-glass-highlight);
+}
+
+/* Reserved for the welcome title and a handful of display marks. */
+:root[data-theme="voidcode"] .voidcode-gradient-text {
+  background-image: var(--voidcode-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+:root[data-theme="voidcode"] .voidcode-gradient-edge {
+  position: relative;
+}
+
+:root[data-theme="voidcode"] .voidcode-gradient-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--voidcode-glass-border);
+  pointer-events: none;
+}
+
+/* Thin, dark scrollbars across every surface, including hover-less devices. */
+@supports selector(::-webkit-scrollbar) {
+  :root[data-theme="voidcode"] ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  :root[data-theme="voidcode"] ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  :root[data-theme="voidcode"] ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    border: 1px solid transparent;
+    min-width: 24px;
+    min-height: 24px;
+  }
+
+  :root[data-theme="voidcode"] :hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Inline tool and reasoning capsules. */
+:root[data-theme="voidcode"] [data-voidcode-capsule] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--voidcode-glass-border);
+  background-color: var(--voidcode-card);
+  color: var(--v2-text-text-muted);
+  font: inherit;
+  line-height: var(--line-height-compact);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+:root[data-theme="voidcode"] [data-voidcode-capsule]:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="voidcode"] [data-voidcode-capsule][data-open="true"] {
+  border-color: var(--voidcode-glass-border-strong, rgba(255, 255, 255, 0.2));
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Three-column shell: hairlines over true black. */
+:root[data-theme="voidcode"] [data-voidcode-shell] {
+  background-color: var(--voidcode-void);
+}
+
+:root[data-theme="voidcode"] [data-voidcode-column] {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--voidcode-panel);
+  border-inline-start: 1px solid var(--voidcode-glass-border);
+}
+
+:root[data-theme="voidcode"] [data-voidcode-resize] {
+  position: relative;
+  flex: 0 0 1px;
+  background: var(--voidcode-glass-border);
+}
+
+:root[data-theme="voidcode"] [data-voidcode-resize]::after {
+  content: "";
+  position: absolute;
+  inset: -3px 0;
+}
+
+:root[data-theme="voidcode"] [data-voidcode-resize][data-dragging="true"] {
+  background: var(--voidcode-gradient-solid);
+}
+
+/* Effort slider: a four-detent track with an ice thumb. */
+:root[data-theme="voidcode"] .voidcode-effort {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__track {
+  position: relative;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__rail {
+  position: absolute;
+  inset-inline: 8px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__fill {
+  position: absolute;
+  inset-inline-start: 8px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--voidcode-gradient-solid);
+  transition: width 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__thumb {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--voidcode-void);
+  background: var(--voidcode-gradient-solid);
+  transform: translateX(-50%);
+  transition: left 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__detents {
+  display: flex;
+  justify-content: space-between;
+  gap: 2px;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__detent {
+  min-width: 0;
+  flex: 1;
+  padding: 3px 0;
+  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  color: var(--v2-text-text-faint);
+  font: inherit;
+  line-height: var(--line-height-tight);
+  text-align: center;
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__detent:hover {
+  color: var(--v2-text-text-base);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__detent[aria-checked="true"] {
+  color: var(--v2-text-text-base);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__hint {
+  color: var(--v2-text-text-faint);
+  font-size: 12px;
+  line-height: var(--line-height-tight);
+}
+
+/* Model preview cards: flat, no blob, no lift. */
+:root[data-theme="voidcode"] .voidcode-model-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--voidcode-glass-border);
+  background-color: var(--voidcode-card);
+  transition: border-color 160ms ease;
+}
+
+:root[data-theme="voidcode"] .voidcode-model-card:hover,
+:root[data-theme="voidcode"] .voidcode-model-card[data-selected="true"] {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+:root[data-theme="voidcode"] .voidcode-model-card__icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+}
+
+:root[data-theme="voidcode"] .voidcode-model-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+:root[data-theme="voidcode"] .voidcode-model-card__badge {
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--voidcode-glass-border);
+  color: var(--v2-text-text-muted);
+  font-size: 11px;
+  line-height: var(--line-height-tight);
+}
+
+/* The real mark: no halo, no drop shadow, no pulse. */
+:root[data-theme="voidcode"] .voidcode-logo {
+  display: block;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+
+/* Quick cards keep their full padding at every width; never clip the labels. */
+:root[data-theme="voidcode"] .voidcode-quick-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 14px 16px;
+  text-align: start;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+:root[data-theme="voidcode"] .voidcode-quick-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--v2-background-bg-layer-03);
+}
+
+:root[data-theme="voidcode"] [data-voidcode-quick-dock] {
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+:root[data-theme="voidcode"] .voidcode-status-orb {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background-color: var(--v2-text-text-faint);
+}
+
+:root[data-theme="voidcode"] .voidcode-status-orb[data-status="running"] {
+  background-color: var(--voidcode-gradient-solid);
+}
+
+:root[data-theme="voidcode"] .voidcode-status-orb[data-status="error"] {
+  background-color: var(--v2-state-fg-danger);
+}
+
+:root[data-theme="voidcode"] .voidcode-status-orb[data-status="idle"] {
+  background-color: #6ee7a8;
+}
+
+:root[data-theme="voidcode"] .voidcode-fade-in {
+  animation: voidcode-fade-in 220ms ease both;
+}
+
+@keyframes voidcode-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Compact density tightens the shell without changing component markup. */
+:root[data-theme="voidcode"][data-voidcode-density="compact"] [data-voidcode-shell] {
+  --voidcode-radius: 10px;
+}
+
+:root[data-theme="voidcode"][data-voidcode-density="compact"] [data-voidcode-card] {
+  border-radius: 8px;
+}
+
+:root[data-theme="voidcode"][data-voidcode-density="compact"] .voidcode-quick-card {
+  min-height: 44px;
+  padding: 10px 12px;
+}
+
+/* Chat text size follows the Studio preference. */
+:root[data-theme="voidcode"] [data-slot="new-session-composer"] textarea,
+:root[data-theme="voidcode"] [data-voidcode-chat] {
+  font-size: var(--voidcode-chat-size);
+}
+
+/* Privacy Shield states. Blur is a presentation-only veil; it does not change data. */
+:root[data-theme="voidcode"][data-voidcode-blur="true"] #root {
+  filter: blur(9px);
+  user-select: none;
+  pointer-events: none;
+}
+
+:root[data-theme="voidcode"] .voidcode-privacy-indicator-icon {
+  flex: 0 0 auto;
+  color: var(--v2-state-fg-success, #6ee7a8);
+}
+
+:root[data-theme="voidcode"] .voidcode-blur-button {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  padding: 0;
+  border: 1px solid var(--voidcode-glass-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--v2-icon-icon-muted);
+  cursor: pointer;
+}
+
+:root[data-theme="voidcode"] .voidcode-blur-button:hover {
+  color: var(--v2-text-text-base);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="voidcode"] [data-voidcode-blur="true"] [data-voidcode-blur-veil] {
+  display: grid;
+}
+
+:root[data-theme="voidcode"] [data-voidcode-blur-veil] {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  place-items: center;
+  background: color-mix(in srgb, var(--voidcode-void) 84%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Local-only removes remote imagery rather than fading it. */
+:root[data-theme="voidcode"][data-voidcode-local-only="true"] img[src^="http://"],
+:root[data-theme="voidcode"][data-voidcode-local-only="true"] img[src^="https://"],
+:root[data-theme="voidcode"][data-voidcode-local-only="true"] iframe[src^="http://"],
+:root[data-theme="voidcode"][data-voidcode-local-only="true"] iframe[src^="https://"] {
+  visibility: hidden;
+}
+
+/* Restyle existing collapsible timeline rows without changing their markup or lifecycle. */
+:root[data-theme="voidcode"] [data-component="reasoning-part"] [data-component="tool-trigger"],
+:root[data-theme="voidcode"] [data-component="tool-part-wrapper"] [data-component="tool-trigger"] {
+  border: 1px solid var(--voidcode-glass-border);
+  border-radius: 999px;
+  background-color: var(--voidcode-card);
+  box-shadow: inset 0 1px 0 0 var(--voidcode-glass-highlight);
+  transition: border-color 160ms ease;
+}
+
+:root[data-theme="voidcode"] [data-component="reasoning-part"] [data-component="tool-trigger"]:hover,
+:root[data-theme="voidcode"] [data-component="tool-part-wrapper"] [data-component="tool-trigger"]:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="voidcode"] .voidcode-fade-in {
+    animation: none;
+  }
+
+  :root[data-theme="voidcode"] [data-voidcode-capsule],
+  :root[data-theme="voidcode"] .voidcode-effort__fill,
+  :root[data-theme="voidcode"] .voidcode-effort__thumb,
+  :root[data-theme="voidcode"] .voidcode-model-card,
+  :root[data-theme="voidcode"] .voidcode-quick-card {
+    transition: none;
+  }
+}
