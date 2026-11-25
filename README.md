@@ -26,7 +26,7 @@ VoidCode is a focused rebuild of the OpenCode desktop experience: a dark, distra
 
 ## Download
 
-Grab the installer from the [latest release](../../releases/latest):
+Grab the installer from the [latest release](https://github.com/Dirfiks3/voidcode/releases/latest):
 
 | Platform | File |
 | --- | --- |
