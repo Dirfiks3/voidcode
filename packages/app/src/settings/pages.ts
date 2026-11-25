@@ -5,6 +5,7 @@ import type { SettingsRootTab } from "./surface"
 export const pageIcons = {
   general: "sliders",
   appearance: "appearance",
+  studio: "sliders",
   customization: "appearance",
   privacy: "shield",
   notifications: "notifications",
@@ -22,6 +23,7 @@ export const pageIcons = {
 export const pageLabels = {
   general: "settings.tab.preferences",
   appearance: "settings.general.section.appearance",
+  studio: "voidcode.tab.studio",
   customization: "voidcode.tab.customization",
   privacy: "voidcode.tab.privacy",
   notifications: "settings.tab.notifications",

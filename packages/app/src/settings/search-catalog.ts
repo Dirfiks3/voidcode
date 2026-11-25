@@ -24,6 +24,11 @@ export const clientSettings: Entry<SettingsRootTab>[] = [
     keywords: "support report issue",
   },
   { tab: "appearance", label: "settings.general.section.appearance" },
+  {
+    tab: "studio",
+    label: "voidcode.tab.studio",
+    keywords: "liquid glass wallpaper theme css keybind customization appearance",
+  },
   { tab: "notifications", label: "settings.tab.notifications" },
   { tab: "shortcuts", label: "settings.shortcuts.title", keywords: "keybind keyboard hotkey" },
   { tab: "about", label: "settings.tab.about", keywords: "version license credits" },

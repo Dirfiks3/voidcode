@@ -4,7 +4,9 @@ import {
   IpcTransportPort,
   WindowSnapshotChannel,
   SystemUsernameChannel,
+  WindowAppearanceChannel,
   storageSnapshotNames,
+  type WindowAppearanceInput,
   type WindowSnapshot,
 } from "../shared/ipc-transport"
 import { windowBootstrapFromArguments } from "../shared/window-bootstrap"
@@ -33,4 +35,5 @@ contextBridge.exposeInMainWorld("electron", {
   plugins: snapshot.then((snapshot) => snapshot.plugins),
   getPathForFile: (file: File) => webUtils.getPathForFile(file),
   systemUsername,
+  setWindowAppearance: (value: WindowAppearanceInput) => ipcRenderer.invoke(WindowAppearanceChannel, value),
 })

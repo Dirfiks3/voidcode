@@ -1,3 +1,5 @@
+import { dict as en } from "@/runtime/i18n/en"
+import { dict as ru } from "@/runtime/i18n/ru"
 import { clearVoidcodeLocalData, readVoidcodePreferences } from "./preferences"
 
 const nativeFetch = typeof window === "undefined" ? undefined : window.fetch.bind(window)
@@ -7,6 +9,13 @@ let guardsInstalled = false
 
 const telemetryHost = /(^|\.)(sentry|posthog|segment|amplitude|mixpanel|plausible|analytics|telemetry|google-analytics|doubleclick|newrelic|datadog|hotjar|fullstory)(\.|$)/i
 const remoteMedia = 'img[src], img[srcset], source[src], source[srcset], iframe[src], video[src], audio[src], track[src], image[href], use[href], link[rel="icon"][href]'
+
+function blockedMessage() {
+  const key = "voidcode.privacy.error.blocked" as const
+  const entry = document.cookie.split("; ").find((part) => part.startsWith("oc_locale="))
+  const locale = entry ? decodeURIComponent(entry.slice("oc_locale=".length)) : ""
+  return locale === "ru" ? ru[key] : en[key]
+}
 
 function isLocal(value: string) {
   if (/^(data|blob|about|chrome-extension):/.test(value)) return true
@@ -74,7 +83,7 @@ export function installPrivacyGuards() {
           : input instanceof Request
             ? input.url
             : undefined
-    if (value && blocked(value)) return Promise.reject(new Error("Void Privacy Shield: request blocked"))
+    if (value && blocked(value)) return Promise.reject(new Error(blockedMessage()))
     return nativeFetch(input, init)
   }) as typeof fetch
 
@@ -86,7 +95,7 @@ export function installPrivacyGuards() {
       username?: string | null,
       password?: string | null,
     ) {
-      if (blocked(String(url))) throw new Error("Void Privacy Shield: request blocked")
+      if (blocked(String(url))) throw new Error(blockedMessage())
       return nativeXhrOpen.call(this, method, url, async ?? true, username ?? null, password ?? null)
     }
   }
@@ -102,7 +111,7 @@ export function installPrivacyGuards() {
   if (nativeEventSource) {
     window.EventSource = class extends nativeEventSource {
       constructor(url: string | URL, init?: EventSourceInit) {
-        if (blocked(String(url))) throw new Error("Void Privacy Shield: request blocked")
+        if (blocked(String(url))) throw new Error(blockedMessage())
         super(url, init)
       }
     }
@@ -112,7 +121,7 @@ export function installPrivacyGuards() {
   if (nativeWebSocket) {
     window.WebSocket = class extends nativeWebSocket {
       constructor(url: string | URL, protocols?: string | string[]) {
-        if (blocked(String(url))) throw new Error("Void Privacy Shield: request blocked")
+        if (blocked(String(url))) throw new Error(blockedMessage())
         super(url, protocols)
       }
     }

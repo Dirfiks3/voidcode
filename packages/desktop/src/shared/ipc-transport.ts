@@ -8,6 +8,14 @@ export const WindowSnapshotChannel = "desktop-window-snapshot"
 
 export const SystemUsernameChannel = "desktop-system-username"
 
+export const WindowAppearanceChannel = "desktop-window-appearance"
+
+export type WindowAppearanceInput = {
+  enabled: boolean
+  preset: "crystal" | "frosted" | "clear"
+  opacity: number
+}
+
 // The main process decodes RPC payloads with the JSON codec, and JSON has no undefined: an
 // optional field the caller left as `undefined` decodes only when its key is absent. Structured
 // clone keeps the key, so drop such fields the way JSON.stringify would, leaving bytes untouched.

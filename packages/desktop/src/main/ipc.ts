@@ -9,6 +9,7 @@ import { SystemResumed } from "../shared/ipc-rpc/events"
 import { DragCancelEvent, IpcTransportPort, SystemUsernameChannel } from "../shared/ipc-transport"
 import { Plugins } from "./plugin"
 import { DesktopFiles, openExternalURL } from "./files"
+import { appearanceHandlers } from "./ipc-handlers/appearance"
 import { appHandlers } from "./ipc-handlers/app"
 import { eventHandlers } from "./ipc-handlers/events"
 import { pluginHandlers } from "./ipc-handlers/plugins"
@@ -54,6 +55,7 @@ export const registerIpcHandlers = Effect.gen(function* () {
 
   yield* Effect.sync(() => ipcMain.handle(SystemUsernameChannel, () => userInfo().username))
   yield* Effect.addFinalizer(() => Effect.sync(() => ipcMain.removeHandler(SystemUsernameChannel)))
+  yield* appearanceHandlers
 
   const menu = {
     commandWindow: getLastFocusedWindow,

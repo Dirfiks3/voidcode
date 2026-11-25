@@ -7,7 +7,7 @@
   <p>
     <img alt="Windows" src="https://img.shields.io/badge/Windows-x64-0078D6?style=flat-square&logo=windows">
     <img alt="License" src="https://img.shields.io/badge/license-MIT-8c7cff?style=flat-square">
-    <img alt="Version" src="https://img.shields.io/badge/version-2.4.1-8c7cff?style=flat-square">
+    <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-8c7cff?style=flat-square">
   </p>
 </div>
 
@@ -17,9 +17,11 @@ VoidCode is a focused rebuild of the OpenCode desktop experience: a dark, distra
 
 - **Self-contained Windows build** — no Bun, Node.js, dev server, or batch files required.
 - **Embedded CLI** — `opencode-cli.exe` is auto-started from app resources on a free loopback port and stopped when VoidCode exits.
+- **Liquid Glass** — saturation, inset highlights, volume shadows, wallpaper-aware blur, and native window translucency.
+- **Wallpapers** — Pure AMOLED, Obsidian Singularity, Cyber Mesh Grid, or your own image with dimming and blur.
+- **VoidCode Studio** — live theme preview, OpenCode JSON theme import/export, instant custom CSS with a kill switch, and shortcut editing.
 - **Local-first controls** — Privacy Shield blocks frontend network boundaries; auto-wipe clears local app records.
-- **Customization** — accent, surface, density, and glass tokens with persisted preferences.
-- **VoidCode theme** — default dark theme with a compact timeline, quiet tool rows, and scoped styling.
+- **Two languages** — complete English and Russian interfaces with no mixed labels.
 - **Clear onboarding** — a short welcome screen instead of a wall of setup steps.
 
 ## Screenshots
@@ -32,7 +34,7 @@ Captured from the packaged Windows build.
 
 ## Download
 
-Grab the installer from the [latest release](https://github.com/Dirfiks3/voidcode/releases/latest):
+Grab the v1.1.0 installer from the [GitHub release](https://github.com/Dirfiks3/voidcode/releases/tag/v1.1.0):
 
 | Platform | File |
 | --- | --- |
@@ -73,8 +75,8 @@ OPENCODE_TARGET=windows-x64-baseline OPENCODE_CHANNEL=latest OPENCODE_VERSION=2.
   bun run script/build.ts --skip-install
 
 cd ../desktop
-OPENCODE_CHANNEL=prod OPENCODE_TARGET=windows-x64 OPENCODE_VERSION=2.4.1 bun run build
-OPENCODE_CHANNEL=prod OPENCODE_TARGET=windows-x64 OPENCODE_VERSION=2.4.1 bun run pack
+OPENCODE_CHANNEL=prod OPENCODE_TARGET=windows-x64 OPENCODE_VERSION=1.1.0 bun run build
+OPENCODE_CHANNEL=prod OPENCODE_TARGET=windows-x64 OPENCODE_VERSION=1.1.0 bun run pack
 ```
 
 ## Credits

@@ -11,6 +11,7 @@ import { LocationProvider } from "@/workspaces/location"
 import { SettingsGeneral } from "./general/general"
 import { SettingsAppearance } from "./appearance/appearance"
 import { SettingsCustomization } from "@/voidcode/customization"
+import { SettingsStudio } from "@/voidcode/studio"
 import { SettingsPrivacy } from "@/voidcode/settings-privacy"
 import { experimentalSettingsAvailable, SettingsExperimental } from "./experimental/experimental"
 import { SettingsKeybinds } from "./keybinds/keybinds"
@@ -40,6 +41,7 @@ import "@/settings/settings.css"
 const rootClientTabs = [
   { value: "general", icon: pageIcons.general, label: "settings.tab.preferences" },
   { value: "appearance", icon: pageIcons.appearance, label: "settings.general.section.appearance" },
+  { value: "studio", icon: pageIcons.studio, label: "voidcode.tab.studio" },
   { value: "customization", icon: pageIcons.customization, label: "voidcode.tab.customization" },
   { value: "privacy", icon: pageIcons.privacy, label: "voidcode.tab.privacy" },
   { value: "notifications", icon: pageIcons.notifications, label: "settings.tab.notifications" },
@@ -258,6 +260,9 @@ function RootSettings() {
       </SettingsPanel>
       <SettingsPanel value="appearance">
         <SettingsAppearance />
+      </SettingsPanel>
+      <SettingsPanel value="studio">
+        <SettingsStudio />
       </SettingsPanel>
       <SettingsPanel value="customization">
         <SettingsCustomization />

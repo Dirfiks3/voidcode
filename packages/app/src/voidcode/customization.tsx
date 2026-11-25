@@ -7,6 +7,7 @@ import { createAppearanceSettingsController } from "@/settings/general/controlle
 import { SettingsList } from "@/settings/list"
 import { SettingsRow } from "@/settings/row"
 import { useVoidcode, type VoidcodeAccent, type VoidcodeDensity, type VoidcodeSurface } from "./preferences"
+import { Slider } from "./slider"
 import "./settings.css"
 
 const accents: { value: VoidcodeAccent; label: Parameters<ReturnType<typeof useLanguage>["t"]>[0] }[] = [
@@ -25,29 +26,6 @@ const densities: { value: VoidcodeDensity; label: Parameters<ReturnType<typeof u
   { value: "standard", label: "voidcode.studio.row.density.standard" },
   { value: "compact", label: "voidcode.studio.row.density.compact" },
 ]
-
-function Slider(props: {
-  label: string
-  min: number
-  max: number
-  value: number
-  display: string
-  onChange: (value: number) => void
-}) {
-  return (
-    <div class="voidcode-slider">
-      <input
-        type="range"
-        min={props.min}
-        max={props.max}
-        value={props.value}
-        aria-label={props.label}
-        onInput={(event) => props.onChange(Number(event.currentTarget.value))}
-      />
-      <span>{props.display}</span>
-    </div>
-  )
-}
 
 export const SettingsCustomization: Component = () => {
   const language = useLanguage()

@@ -36,3 +36,73 @@
   font-size: 12px;
   line-height: var(--line-height-compact);
 }
+
+.voidcode-studio {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.voidcode-studio-section-title {
+  margin: 0 0 8px;
+  color: var(--v2-text-text-muted);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-compact);
+}
+
+.voidcode-studio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.voidcode-studio-themes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(100%, 380px);
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.voidcode-studio-theme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid var(--v2-border-border-muted);
+  border-radius: 10px;
+  background: var(--v2-background-bg-layer-01);
+}
+
+.voidcode-studio-theme-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: var(--line-height-compact);
+}
+
+.voidcode-studio-css {
+  width: min(100%, 460px);
+  min-height: 180px;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid var(--v2-border-border-muted);
+  border-radius: 10px;
+  background: var(--v2-background-bg-deep);
+  color: var(--v2-text-text-base);
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  line-height: var(--line-height-compact);
+  scrollbar-gutter: stable;
+}
+
+.voidcode-studio-css::placeholder {
+  color: var(--v2-text-text-faint);
+}
