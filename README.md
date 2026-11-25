@@ -1,3 +1,5 @@
+![VoidCode banner](.github/assets/voidcode-banner.png)
+
 <div align="center">
   <img src=".github/assets/voidcode-logo.png" alt="VoidCode logo" width="120">
   <h1>VoidCode</h1>
