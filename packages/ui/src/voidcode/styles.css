@@ -14,9 +14,10 @@
   --voidcode-void: #000000;
   --voidcode-panel: #030305;
   --voidcode-card: #08090c;
-  --voidcode-glass-border: rgba(255, 255, 255, 0.08);
-  --voidcode-glass-highlight: rgba(255, 255, 255, 0.035);
+  --voidcode-glass-border: rgba(255, 255, 255, 0.14);
+  --voidcode-glass-highlight: rgba(255, 255, 255, 0.26);
   --voidcode-glass-alpha: 0.04;
+  --voidcode-glass-bg: linear-gradient(165deg, rgba(26, 28, 36, 0.86) 0%, rgba(12, 13, 18, 0.92) 100%);
   --voidcode-accent-a: #e8edf5;
   --voidcode-accent-b: #98a4b5;
   --voidcode-gradient: linear-gradient(135deg, var(--voidcode-accent-a) 0%, var(--voidcode-accent-b) 100%);
@@ -24,11 +25,12 @@
   --voidcode-radius: 14px;
   --voidcode-blur: blur(16px);
   --voidcode-chat-size: 14px;
-  --voidcode-glass-filter: blur(28px) saturate(180%);
+  --voidcode-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --voidcode-glass-filter: blur(36px) saturate(210%);
   --voidcode-glass-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
-    0 18px 48px rgba(0, 0, 0, 0.42);
+    inset 0 1px 1px rgba(255, 255, 255, 0.26),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.05),
+    0 20px 50px rgba(0, 0, 0, 0.72);
   --voidcode-glass-transition: none;
   --voidcode-wallpaper-image: none;
   --voidcode-wallpaper-dim: 0.45;
@@ -36,6 +38,18 @@
   --voidcode-panel-shadow:
     inset 0 1px 0 0 var(--voidcode-glass-highlight),
     0 8px 32px 0 rgba(0, 0, 0, 0.5);
+
+  /* Pure AMOLED: the native theme tokens follow the absolute-black VoidCode ramp. */
+  --background-base: #000000;
+  --background-weak: #050507;
+  --background-strong: #000000;
+  --background-stronger: #050507;
+  --surface-base: #050507;
+  --surface-base-hover: #0a0a0e;
+  --surface-raised-base: #0a0a0e;
+  --surface-raised-base-hover: #0a0a0e;
+  --border-weak-base: rgba(255, 255, 255, 0.08);
+  --border-weaker-base: rgba(255, 255, 255, 0.04);
 
   --v2-background-bg-base: var(--voidcode-void);
   --v2-background-bg-deep: var(--voidcode-void);
@@ -103,6 +117,16 @@
     0 0 0 0.5px var(--voidcode-glass-border);
 }
 
+/* The "Pure AMOLED" wallpaper preset uses the same absolute-black ramp as the theme itself. */
+:root[data-theme="voidcode"][data-voidcode-wallpaper="amoled"] {
+  --background-base: #000000;
+  --surface-base: #050507;
+  --surface-base-hover: #0a0a0e;
+  --surface-raised-base: #0a0a0e;
+  --surface-raised-base-hover: #0a0a0e;
+  --border-weak-base: rgba(255, 255, 255, 0.08);
+}
+
 :root[data-theme="voidcode"] body {
   background-color: var(--voidcode-void);
   background-image: var(--voidcode-wallpaper-image);
@@ -128,16 +152,41 @@
   z-index: 1;
 }
 
-/* One compositing layer, one painted sheen. Nothing here pulses. */
+/* One compositing layer, one painted sheen. Nothing here pulses. The dense gradient keeps text underneath a soft
+   bokeh instead of letting it read through the glass. */
 :root[data-theme="voidcode"]:not([data-voidcode-glass="false"]) [data-voidcode-glass] {
   position: relative;
-  background-color: color-mix(in srgb, var(--voidcode-panel) calc(var(--voidcode-glass-alpha) * 100%), transparent);
+  background: var(--voidcode-glass-bg);
   border: 1px solid var(--voidcode-glass-border);
   border-radius: var(--voidcode-radius);
   box-shadow: var(--voidcode-glass-shadow);
   backdrop-filter: var(--voidcode-glass-filter);
   -webkit-backdrop-filter: var(--voidcode-glass-filter);
   transition: var(--voidcode-glass-transition);
+}
+
+/* Named Liquid Glass surfaces: the same dense substrate, with a refracted top highlight. */
+:root[data-theme="voidcode"] .voidcode-glass-surface,
+:root[data-theme="voidcode"] .voidcode-glass-popover {
+  background: var(--voidcode-glass-bg);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--voidcode-radius);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.26),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.05),
+    0 20px 50px rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(36px) saturate(210%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%);
+}
+
+:root[data-theme="voidcode"] .voidcode-glass-surface::before,
+:root[data-theme="voidcode"] .voidcode-glass-popover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 42%);
 }
 
 :root[data-theme="voidcode"][data-voidcode-wallpaper]:not([data-voidcode-wallpaper="none"]) [data-voidcode-shell] {
@@ -228,6 +277,71 @@
   background-color: rgba(255, 255, 255, 0.06);
 }
 
+/* Reasoning effort lives in one toolbar pill; the editor itself never grows a panel. */
+:root[data-theme="voidcode"] .voidcode-effort-pill {
+  color: var(--v2-text-text-muted);
+  font-size: 12px;
+  font-weight: 520;
+  white-space: nowrap;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort-pill:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort-pill__glyph {
+  width: 10px;
+  height: 13px;
+  flex: 0 0 auto;
+  background: linear-gradient(180deg, #4da6ff, #9b72cb);
+  clip-path: polygon(58% 0%, 12% 56%, 44% 56%, 34% 100%, 88% 40%, 55% 40%);
+  filter: drop-shadow(0 0 5px rgba(77, 166, 255, 0.35));
+}
+
+:root[data-theme="voidcode"] [data-popper-positioner]:has(.voidcode-effort-popover) {
+  z-index: 80;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort-popover {
+  /* The composer toolbar is a scroll container; the popover is portaled and must paint above it and the timeline. */
+  position: relative;
+  z-index: 80;
+  min-width: 350px;
+  width: max-content;
+  max-width: 400px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  animation: voidcode-effort-popover-in 180ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort--compact {
+  gap: 4px;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort--compact .voidcode-effort__track {
+  height: 18px;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort--compact .voidcode-effort__detent {
+  font-size: 11px;
+}
+
+:root[data-theme="voidcode"] .voidcode-effort--compact .voidcode-effort__hint {
+  min-height: var(--line-height-tight);
+}
+
+@keyframes voidcode-effort-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Three-column shell: hairlines over true black. */
 :root[data-theme="voidcode"] [data-voidcode-shell] {
   background-color: var(--voidcode-void);
@@ -273,6 +387,12 @@
   align-items: center;
 }
 
+:root[data-theme="voidcode"] .voidcode-effort__track:focus-visible {
+  outline: 2px solid var(--v2-border-border-focus);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
 :root[data-theme="voidcode"] .voidcode-effort__rail {
   position: absolute;
   inset-inline: 8px;
@@ -286,7 +406,7 @@
   inset-inline-start: 8px;
   height: 4px;
   border-radius: 999px;
-  background: var(--voidcode-gradient-solid);
+  background: linear-gradient(90deg, #4da6ff, #9b72cb);
   transition: width 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -296,7 +416,7 @@
   height: 14px;
   border-radius: 50%;
   border: 2px solid var(--voidcode-void);
-  background: var(--voidcode-gradient-solid);
+  background: linear-gradient(135deg, #4da6ff, #9b72cb);
   transform: translateX(-50%);
   transition: left 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: none;
@@ -311,26 +431,36 @@
 :root[data-theme="voidcode"] .voidcode-effort__detent {
   min-width: 0;
   flex: 1;
-  padding: 3px 0;
-  border-radius: 6px;
-  background: transparent;
-  border: 0;
+  padding: 6px 8px;
+  border-radius: 999px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   color: var(--v2-text-text-faint);
   font: inherit;
   line-height: var(--line-height-tight);
   text-align: center;
   cursor: pointer;
-  transition: color 160ms ease, background-color 160ms ease;
+  transition: color 180ms var(--voidcode-spring), background-color 180ms var(--voidcode-spring),
+    border-color 180ms var(--voidcode-spring), box-shadow 180ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort__detent:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(77, 166, 255, 0.5);
 }
 
 :root[data-theme="voidcode"] .voidcode-effort__detent:hover {
   color: var(--v2-text-text-base);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 :root[data-theme="voidcode"] .voidcode-effort__detent[aria-checked="true"] {
-  color: var(--v2-text-text-base);
-  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(155, 114, 203, 0.55);
+  background: linear-gradient(135deg, rgba(77, 166, 255, 0.22), rgba(155, 114, 203, 0.26));
+  box-shadow: 0 0 16px rgba(122, 140, 235, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 :root[data-theme="voidcode"] .voidcode-effort__hint {
@@ -360,6 +490,24 @@
   width: 24px;
   height: 24px;
   flex: 0 0 24px;
+}
+
+:root[data-theme="voidcode"] .voidcode-model-logo {
+  display: inline-flex;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+:root[data-theme="voidcode"] .voidcode-model-logo--fallback {
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--v2-text-text-muted);
+  font-size: 9px;
+  font-weight: 650;
+  line-height: 1;
 }
 
 :root[data-theme="voidcode"] .voidcode-model-card__badges {
@@ -525,8 +673,307 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Step capsules use the theme ramp directly; the only color is the small status dot. */
+:root[data-theme="voidcode"] .voidcode-agent-capsule {
+  width: 100%;
+  text-align: start;
+  border: 1px solid var(--border-weak-base);
+  border-radius: var(--radius-lg);
+  background: var(--surface-base);
+  box-shadow: var(--shadow-xs, none);
+  backdrop-filter: var(--voidcode-glass-filter, blur(18px));
+  -webkit-backdrop-filter: var(--voidcode-glass-filter, blur(18px));
+  transition: border-color 160ms var(--voidcode-spring), background-color 160ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-agent-capsule:hover {
+  border-color: var(--border-base);
+  background: var(--surface-base-hover);
+}
+
+:root[data-theme="voidcode"] .voidcode-agent-capsule__icon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  border-radius: var(--radius-sm);
+  color: var(--text-weak);
+}
+
+:root[data-theme="voidcode"] .voidcode-agent-capsule__dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: var(--text-weak);
+}
+
+:root[data-theme="voidcode"] .voidcode-agent-capsule[data-status="running"] .voidcode-agent-capsule__dot {
+  background: var(--accent-base, var(--text-interactive-base));
+}
+:root[data-theme="voidcode"] .voidcode-agent-capsule[data-status="completed"] .voidcode-agent-capsule__dot {
+  background: var(--text-on-success-base);
+}
+:root[data-theme="voidcode"] .voidcode-agent-capsule[data-status="error"] .voidcode-agent-capsule__dot {
+  background: var(--text-on-critical-base);
+}
+
+:root[data-theme="voidcode"] .voidcode-agent-capsule__log {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface-inset-base, var(--background-base));
+  transition: grid-template-rows 260ms var(--voidcode-spring), opacity 160ms var(--voidcode-spring);
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+:root[data-theme="voidcode"] .voidcode-agent-capsule__log[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+:root[data-theme="voidcode"] .voidcode-agent-capsule__log > div {
+  min-height: 0;
+  overflow: auto;
+}
+
+:root[data-theme="voidcode"][data-voidcode-agent-capsules="true"] [data-component="tool-part-wrapper"] [data-component="tool-trigger"] {
+  border-radius: var(--radius-lg);
+  border-color: var(--border-weak-base);
+  background: var(--surface-base);
+  box-shadow: var(--shadow-xs, none);
+  transition: border-color 160ms var(--voidcode-spring);
+}
+
+/* Inspector: every surface, hairline and text role comes from the active theme ramp. */
+:root[data-theme="voidcode"] .voidcode-inspector {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--background-base);
+  border-inline-start: 1px solid var(--border-weak-base);
+  backdrop-filter: var(--voidcode-glass-filter, blur(24px));
+  -webkit-backdrop-filter: var(--voidcode-glass-filter, blur(24px));
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__tabs {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 0 12px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-base);
+  border: 1px solid var(--border-weak-base);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__indicator {
+  position: absolute;
+  inset-block: 4px;
+  width: var(--indicator-width, 25%);
+  transform: translateX(var(--indicator-x, 0));
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-weak-base);
+  background: var(--surface-raised-base);
+  box-shadow: var(--shadow-xs, none);
+  pointer-events: none;
+  transition: transform 280ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__tab {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  padding: 0 4px;
+  border: 0;
+  outline: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-weak);
+  font-family: var(--font-family-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: var(--line-height-base);
+  cursor: pointer;
+  transition: color 160ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__tab[aria-selected="true"] {
+  color: var(--text-strong);
+  font-weight: 500;
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__body {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 16px 24px;
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__card {
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-weak-base);
+  background: var(--surface-base);
+  box-shadow: var(--shadow-xs, none);
+  backdrop-filter: var(--voidcode-glass-filter, blur(20px));
+  -webkit-backdrop-filter: var(--voidcode-glass-filter, blur(20px));
+  transition: border-color 160ms var(--voidcode-spring), background-color 160ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__card:hover {
+  border-color: var(--border-base);
+  background: var(--surface-base-hover);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__preview {
+  max-height: 192px;
+  overflow: auto;
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-inset-base, var(--background-base));
+  border: 1px solid var(--border-weak-base);
+  color: var(--text-strong);
+  font: 12px/var(--line-height-base) var(--font-family-mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  line-height: var(--line-height-base);
+  border: 1px solid var(--border-weak-base);
+  background: var(--surface-base);
+  color: var(--text-weak);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__badge[data-tone="add"] {
+  color: var(--text-on-success-base);
+  border-color: var(--border-success-base);
+  background: var(--surface-success-weak);
+}
+:root[data-theme="voidcode"] .voidcode-inspector__badge[data-tone="remove"] {
+  color: var(--text-on-critical-base);
+  border-color: var(--border-critical-base);
+  background: var(--surface-critical-weak);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__progress {
+  height: 4px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-raised-base);
+}
+:root[data-theme="voidcode"] .voidcode-inspector__progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent-base, var(--text-interactive-base));
+  transition: width 200ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 32px;
+  padding: 8px;
+  border-radius: var(--radius-lg);
+  transition: background-color 160ms var(--voidcode-spring);
+}
+:root[data-theme="voidcode"] .voidcode-inspector__row:hover {
+  background: var(--surface-base-hover);
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector__diff-add {
+  color: var(--text-on-success-base);
+  background: var(--surface-success-weak);
+}
+:root[data-theme="voidcode"] .voidcode-inspector__diff-remove {
+  color: var(--text-on-critical-base);
+  background: var(--surface-critical-weak);
+}
+
+/* Motion blur and spring physics, gated by the Studio toggle. */
+:root[data-theme="voidcode"][data-voidcode-motion="true"] {
+  --voidcode-glass-transition: transform 420ms var(--voidcode-spring),
+    backdrop-filter 420ms var(--voidcode-spring), filter 180ms var(--voidcode-spring);
+}
+
+@keyframes voidcode-motion-blur-in {
+  0% { opacity: 0; transform: translateY(8px) scale(0.985); filter: url(#voidcode-motion-blur); }
+  45% { opacity: 1; filter: blur(2px); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes voidcode-motion-blur-panel {
+  0% { opacity: 0; transform: translateX(-16px); filter: url(#voidcode-motion-blur); }
+  38% { opacity: 1; filter: url(#voidcode-motion-blur); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes voidcode-motion-blur-panel-end {
+  0% { opacity: 0; transform: translateX(16px); filter: url(#voidcode-motion-blur); }
+  38% { opacity: 1; filter: url(#voidcode-motion-blur); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes voidcode-tab-blur-in {
+  0% { opacity: 0; transform: translateY(4px); filter: url(#voidcode-motion-blur); }
+  45% { opacity: 1; filter: blur(1px); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes voidcode-cascade-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+:root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-effort-popover,
+:root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-glass-popover,
+:root[data-theme="voidcode"][data-voidcode-motion="true"] [data-component="popover-content"] {
+  animation: voidcode-motion-blur-in 220ms var(--voidcode-spring) both;
+}
+
+:root[data-theme="voidcode"][data-voidcode-motion="true"] [data-slot="vertical-tabs-sidebar"] {
+  animation: voidcode-motion-blur-panel 260ms var(--voidcode-spring) both;
+}
+
+:root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-inspector {
+  animation: voidcode-motion-blur-panel-end 260ms var(--voidcode-spring) both;
+}
+
+:root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-inspector__body {
+  animation: voidcode-tab-blur-in 180ms var(--voidcode-spring) both;
+}
+
+:root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-inspector__card,
+:root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-agent-capsule {
+  animation: voidcode-cascade-in 260ms var(--voidcode-spring) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  :root[data-theme="voidcode"] .voidcode-fade-in {
+  :root[data-theme="voidcode"] .voidcode-fade-in,
+  :root[data-theme="voidcode"] .voidcode-effort-popover,
+  :root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-inspector,
+  :root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-inspector__body,
+  :root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-inspector__card,
+  :root[data-theme="voidcode"][data-voidcode-motion="true"] .voidcode-agent-capsule,
+  :root[data-theme="voidcode"][data-voidcode-motion="true"] [data-slot="vertical-tabs-sidebar"],
+  :root[data-theme="voidcode"][data-voidcode-motion="true"] [data-component="popover-content"] {
     animation: none;
   }
 
@@ -535,7 +982,9 @@
   :root[data-theme="voidcode"] .voidcode-effort__fill,
   :root[data-theme="voidcode"] .voidcode-effort__thumb,
   :root[data-theme="voidcode"] .voidcode-model-card,
-  :root[data-theme="voidcode"] .voidcode-quick-card {
+  :root[data-theme="voidcode"] .voidcode-quick-card,
+  :root[data-theme="voidcode"] .voidcode-inspector__indicator,
+  :root[data-theme="voidcode"] .voidcode-agent-capsule__log {
     transition: none;
   }
 }

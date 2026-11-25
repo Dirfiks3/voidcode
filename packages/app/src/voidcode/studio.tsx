@@ -9,6 +9,7 @@ import { useLanguage } from "@/runtime/i18n/language"
 import { useSettingsSurface } from "@/settings/surface"
 import { SettingsList } from "@/settings/list"
 import { SettingsRow } from "@/settings/row"
+import { ModelFallbackSettings } from "@/settings/models/fallback"
 import { useVoidcode, type VoidcodeLiquidPreset, type VoidcodeWallpaper } from "./preferences"
 import { Slider } from "./slider"
 import {
@@ -340,6 +341,19 @@ export const SettingsStudio: Component = () => {
         </div>
       </div>
       <div class="settings-tab-body voidcode-studio">
+        <section class="voidcode-studio-section">
+          <h3 class="voidcode-studio-section-title">{language.t("settings.models.fallback.title")}</h3>
+          <SettingsList>
+            <SettingsRow
+              title={language.t("settings.models.fallback.title")}
+              description={language.t("settings.models.fallback.description")}
+              align="start"
+            >
+              <ModelFallbackSettings />
+            </SettingsRow>
+          </SettingsList>
+        </section>
+
         <section class="voidcode-studio-section">
           <h3 class="voidcode-studio-section-title">{language.t("voidcode.studio.section.liquid")}</h3>
           <SettingsList>

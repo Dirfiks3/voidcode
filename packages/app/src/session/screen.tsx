@@ -29,6 +29,7 @@ import { createMobileViews, MobileViewTabs } from "@/runtime/plugin/mobile"
 import { usePluginAttachment } from "@/runtime/plugin/host-apis"
 import { createMountedSession, type ScreenPrompt } from "@/runtime/plugin/mounted-session"
 import { useUsageExceededDialogs } from "./usage-exceeded-dialogs"
+import { useModelFallback } from "./use-model-fallback"
 import { SessionErrorFallback } from "./route-error"
 import { createSessionScreenLayout } from "./screen-layout"
 import { PaneTabs, SideRegion } from "@/runtime/plugin/side-region"
@@ -253,6 +254,7 @@ function SessionScreenContent(props: {
     selection: () => composer.active()?.composer.model.selection,
     onDone: () => composer.active()?.composer.restoreFocus(),
   })
+  useModelFallback()
 
   const quote = createTimelineQuote({
     root: timeline.scroller,

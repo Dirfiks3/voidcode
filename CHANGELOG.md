@@ -2,6 +2,17 @@
 
 Release notes for OpenCode V2, newest first.
 
+## VoidCode v1.3.0 — 2026-11-25
+
+- Restored the right-hand Inspector with four live tabs: Artifacts (code/file/report cards with copy, open and export), Plan (todos, progress and agent step capsules), Diffs (per-file `+/-` badges and collapsible patches) and Files (searchable workspace tree with preview). Opens from the titlebar button or Ctrl+I.
+- Added an animated tab indicator, graphite-glass surfaces and restrained status colors across the Inspector, using native theme tokens so it follows AMOLED, VoidCode, Liquid Glass and custom JSON themes.
+- Introduced local SVG model logos with case-insensitive provider/model matching in the model button, picker and preview card.
+- Added a compact reasoning-effort pill with a four-level Liquid Glass popover; fixed form interception and portal stacking.
+- Added Smart Model Fallback Chain settings and runtime with limit detection, model switching and EN/RU notifications.
+- Reworked the VoidCode theme to Pure AMOLED (`#000000` base, `#050507` surfaces, `#0a0a0e` raised surfaces) with graphite hairline dividers.
+- Added Liquid Glass surfaces and optional Motion Blur with spring physics for popovers, panels and tab changes.
+- Regenerated Windows icons with a tighter emblem crop and stronger edge contrast.
+
 ## v2.4.1 — 2026-11-23
 
 ### Highlights

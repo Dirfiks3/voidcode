@@ -1,4 +1,4 @@
-import { Show, startTransition, Suspense, type JSX, type ParentProps } from "solid-js"
+import { createMemo, createResource, Show, startTransition, Suspense, type JSX, type ParentProps } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createMediaQuery } from "@solid-primitives/media"
 import { ResizeHandle } from "@opencode/ui/resize-handle"
@@ -29,6 +29,10 @@ import {
 import { createPanelMotion, guardClosingFocus, panelOpacity, setPanelResizing } from "@/shell/panel-motion"
 import { createSidebarPeek } from "@/shell/sidebar-peek"
 import { windowDragEnabled } from "@/session/header/drag-area"
+import { useCurrentRoute } from "@/shell/state/layout"
+import { usePluginAttachment } from "@/runtime/plugin/attachment"
+import { usePluginHost } from "@/runtime/plugin/host"
+import { ArtifactsView, DiffsView, FilesView, PlanView } from "@/voidcode/inspector/view"
 
 type SidebarPose = { closed: number; peek: number | undefined }
 
@@ -57,6 +61,63 @@ export default function Layout(props: ParentProps) {
   const servers = useServers()
   const tabs = useTabs()
   const mobile = createMediaQuery("(max-width: 767px)")
+  const route = useCurrentRoute()
+  const pluginHost = usePluginHost()
+  const attachment = usePluginAttachment()
+
+  // The shell sits above the server provider, so it reaches the active session through the global registry.
+  const activeServer = createMemo(() => {
+    const current = route()
+    return current.type === "session" ? global.serverCtx(current.server) : undefined
+  })
+  const sessionID = createMemo(() => {
+    const current = route()
+    return current.type === "session" ? current.sessionId : undefined
+  })
+  const messages = createMemo(() => {
+    const id = sessionID()
+    const data = activeServer()?.data
+    return id && data ? data.session.message.list(id) : []
+  })
+  const directory = createMemo(() => {
+    const id = sessionID()
+    return id ? activeServer()?.data.session.get(id)?.location.directory : undefined
+  })
+  const [workspaceFiles] = createResource(directory, async (dir) => {
+    const sdk = activeServer()?.sdk
+    if (!sdk) return []
+    const files: string[] = []
+    const visit = async (relative: string, depth: number): Promise<void> => {
+      if (depth < 0 || files.length >= 600) return
+      const result = await sdk.api.file.list({ path: relative, location: { directory: dir } })
+      for (const entry of result.data) {
+        if (entry.type === "directory") await visit(entry.path, depth - 1)
+        else files.push(entry.path)
+        if (files.length >= 600) return
+      }
+    }
+    try {
+      await visit(".", 4)
+    } catch {
+      // A workspace without file access still shows the other inspector tabs.
+    }
+    return files
+  })
+  const files = createMemo(() => workspaceFiles() ?? [])
+  const readFile = async (path: string) => {
+    const sdk = activeServer()?.sdk
+    const dir = directory()
+    if (!sdk || !dir) return undefined
+    try {
+      const bytes = await sdk.api.file.read({ path, location: { directory: dir } })
+      return new TextDecoder().decode(bytes)
+    } catch {
+      return undefined
+    }
+  }
+  const openFile = (path: string) => {
+    pluginHost.links.open({ href: path, exact: true, background: true, session: attachment.current() })
+  }
 
   createTipToasts()
 
@@ -231,11 +292,20 @@ export default function Layout(props: ParentProps) {
       },
     },
   ])
+  // Getters build a view only while its tab is mounted, so a hidden tab never parses the transcript.
   const inspectorViews = {
-    artifacts: <p class="text-[13px] leading-[var(--line-height-base)]">{language.t("voidcode.inspector.empty.artifacts")}</p>,
-    diffs: <p class="text-[13px] leading-[var(--line-height-base)]">{language.t("voidcode.inspector.empty.diffs")}</p>,
-    plan: <p class="text-[13px] leading-[var(--line-height-base)]">{language.t("voidcode.inspector.empty.plan")}</p>,
-    files: <p class="text-[13px] leading-[var(--line-height-base)]">{language.t("voidcode.inspector.empty.files")}</p>,
+    get artifacts() {
+      return <ArtifactsView messages={messages} files={files} readFile={readFile} openFile={openFile} />
+    },
+    get diffs() {
+      return <DiffsView messages={messages} files={files} readFile={readFile} openFile={openFile} />
+    },
+    get plan() {
+      return <PlanView messages={messages} files={files} readFile={readFile} openFile={openFile} />
+    },
+    get files() {
+      return <FilesView messages={messages} files={files} readFile={readFile} openFile={openFile} />
+    },
   } satisfies Record<InspectorTab, JSX.Element>
 
   const bottomTitlebar = () => mobile() && preferences.general.mobileTitlebarPosition() === "bottom"
@@ -264,7 +334,11 @@ export default function Layout(props: ParentProps) {
           : "max(0px, calc(8px - var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))))",
       }}
     >
-      <Titlebar verticalTabs={verticalTabs() ? { mount: state.tabsMount } : undefined} />
+      <Titlebar
+        verticalTabs={verticalTabs() ? { mount: state.tabsMount } : undefined}
+        inspectorVisible={state.inspectorVisible}
+        onToggleInspector={toggleInspector}
+      />
       <ShortcutLayer
         onToggleSidebar={toggleSidebar}
         onToggleInspector={toggleInspector}

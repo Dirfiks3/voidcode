@@ -193,18 +193,18 @@ const wallpapers: Record<Exclude<VoidcodeWallpaper, "none" | "custom">, string> 
 
 const presets: Record<VoidcodeLiquidPreset, { filter: string; shadow: string; border: string }> = {
   crystal: {
-    filter: "blur(28px) saturate(180%)",
-    shadow: "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(255,255,255,0.05), 0 18px 48px rgba(0,0,0,0.42)",
+    filter: "blur(36px) saturate(210%)",
+    shadow: "inset 0 1px 1px rgba(255,255,255,0.26), inset 0 -1px 1px rgba(255,255,255,0.05), 0 20px 50px rgba(0,0,0,0.72)",
     border: "rgba(255,255,255,0.14)",
   },
   frosted: {
-    filter: "blur(34px) saturate(145%)",
-    shadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 64px rgba(0,0,0,0.52)",
-    border: "rgba(255,255,255,0.10)",
+    filter: "blur(40px) saturate(170%)",
+    shadow: "inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(255,255,255,0.05), 0 24px 60px rgba(0,0,0,0.78)",
+    border: "rgba(255,255,255,0.12)",
   },
   clear: {
-    filter: "blur(12px) saturate(200%)",
-    shadow: "inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.28)",
+    filter: "blur(18px) saturate(230%)",
+    shadow: "inset 0 1px 1px rgba(255,255,255,0.22), inset 0 -1px 1px rgba(255,255,255,0.07), 0 12px 32px rgba(0,0,0,0.48)",
     border: "rgba(255,255,255,0.18)",
   },
 }
@@ -229,12 +229,30 @@ function applyRoot(state: VoidcodePreferences) {
   root.dataset.voidcodeLocalOnly = String(state.localOnly)
   root.dataset.voidcodeGlass = String(state.liquidGlass)
   root.dataset.voidcodeMotion = String(state.motionBlur)
+  root.dataset.voidcodeAgentCapsules = String(state.motionBlur)
   root.dataset.voidcodeWallpaper = state.wallpaper
   root.dataset.voidcodePreset = state.liquidPreset
 
-  root.style.setProperty("--voidcode-void", state.surface === "amoled" ? "#000000" : "#0a0c10")
-  root.style.setProperty("--voidcode-panel", state.surface === "amoled" ? "#030305" : "#11141c")
-  root.style.setProperty("--voidcode-card", state.surface === "amoled" ? "#08090c" : "#181c26")
+  const amoled = state.surface === "amoled"
+  root.style.setProperty("--voidcode-void", amoled ? "#000000" : "#0a0c10")
+  root.style.setProperty("--voidcode-panel", amoled ? "#030305" : "#11141c")
+  root.style.setProperty("--voidcode-card", amoled ? "#08090c" : "#181c26")
+
+  // Pure AMOLED is the theme's own ramp; let the active theme own those tokens. Graphite keeps its own inline steps.
+  const baseTokens = {
+    "--background-base": "#0a0c10",
+    "--background-weak": "#11141c",
+    "--background-strong": "#0a0c10",
+    "--background-stronger": "#11141c",
+    "--surface-base": "#11141c",
+    "--surface-base-hover": "#181c26",
+    "--surface-raised-base": "#181c26",
+    "--surface-raised-base-hover": "#202635",
+  }
+  for (const [token, value] of Object.entries(baseTokens)) {
+    if (amoled) root.style.removeProperty(token)
+    else root.style.setProperty(token, value)
+  }
   root.style.setProperty("--voidcode-accent-a", accent.a)
   root.style.setProperty("--voidcode-accent-b", accent.b)
   root.style.setProperty("--voidcode-gradient", `linear-gradient(135deg, ${accent.a} 0%, ${accent.b} 100%)`)

@@ -113,7 +113,11 @@ function SidebarAction(props: {
   )
 }
 
-export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
+export function Titlebar(props: {
+  verticalTabs?: { mount?: HTMLElement }
+  inspectorVisible?: boolean
+  onToggleInspector?: () => void
+}) {
   const preferences = useVoidcode()
   const platform = usePlatform()
   const command = useCommand()
@@ -1081,6 +1085,27 @@ export function Titlebar(props: { verticalTabs?: { mount?: HTMLElement } }) {
                       <Show when={!props.verticalTabs}>
                         <div class="relative z-20 flex shrink-0 items-center justify-end gap-0 overflow-visible">
                           <TitlebarItems items={titlebarItems} />
+                          <Show when={props.onToggleInspector}>
+                            <Tooltip
+                              placement="bottom"
+                              value={
+                                <>
+                                  {language.t("voidcode.inspector.toggle")}
+                                  <Keybind keys={["Ctrl", "I"]} variant="neutral" />
+                                </>
+                              }
+                            >
+                              <IconButton
+                                icon={<Icon name="layout-right" />}
+                                variant="ghost-muted"
+                                size="large"
+                                data-slot="inspector-toggle"
+                                aria-label={language.t("voidcode.inspector.toggle")}
+                                aria-pressed={props.inspectorVisible}
+                                onClick={() => props.onToggleInspector?.()}
+                              />
+                            </Tooltip>
+                          </Show>
                         </div>
                       </Show>
                     </div>

@@ -1,4 +1,4 @@
-import { For, type Component, type JSX } from "solid-js"
+import { For, Show, type Component, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useI18n } from "../context/i18n"
 
@@ -14,31 +14,43 @@ export const InspectorPanel: Component<{
 }> = (props) => {
   const i18n = useI18n()
   const [state, setState] = createStore<{ tab: InspectorTab }>({ tab: props.active ?? "diffs" })
+  const index = () => Math.max(0, TABS.indexOf(state.tab))
 
   const select = (tab: InspectorTab) => {
+    if (tab === state.tab) return
     setState("tab", tab)
     props.onChange?.(tab)
   }
 
   return (
-    <aside data-voidcode-glass data-voidcode-column class={props.class ?? "h-full w-full overflow-hidden"}>
-      <div class="flex h-10 shrink-0 items-center justify-between gap-2 border-b border-v2-border-border-muted px-3">
+    <aside
+      data-voidcode-glass
+      data-voidcode-column
+      class="voidcode-inspector"
+      classList={{ [props.class ?? ""]: !!props.class }}
+    >
+      <div class="flex h-10 shrink-0 items-center justify-between gap-2 px-3 pt-1">
         <span class="text-[12px] font-[530] leading-[var(--line-height-tight)] text-v2-text-text-muted">
           {i18n.t("ui.voidcode.inspector.title")}
         </span>
       </div>
-      <div class="flex shrink-0 gap-1 border-b border-v2-border-border-muted p-2" role="tablist">
+      <div
+        class="voidcode-inspector__tabs"
+        role="tablist"
+        aria-label={i18n.t("ui.voidcode.inspector.title")}
+        style={{
+          "--indicator-width": `${100 / TABS.length}%`,
+          "--indicator-x": `${index() * 100}%`,
+        }}
+      >
+        <span class="voidcode-inspector__indicator" aria-hidden="true" />
         <For each={TABS}>
           {(tab) => (
             <button
               type="button"
               role="tab"
               aria-selected={state.tab === tab}
-              class="min-w-0 flex-1 rounded-md px-1 py-1 text-[12px] leading-[var(--line-height-tight)] transition-colors"
-              classList={{
-                "bg-v2-overlay-simple-overlay-hover text-v2-text-text-base": state.tab === tab,
-                "text-v2-text-text-faint hover:text-v2-text-text-base": state.tab !== tab,
-              }}
+              class="voidcode-inspector__tab"
               onClick={() => select(tab)}
             >
               {i18n.t(`ui.voidcode.inspector.${tab}`)}
@@ -46,9 +58,14 @@ export const InspectorPanel: Component<{
           )}
         </For>
       </div>
-      <div class="min-h-0 flex-1 overflow-y-auto p-3" role="tabpanel">
-        {props.views[state.tab]}
-      </div>
+      {/* Keyed by tab so a switch remounts the panel and restarts its motion-blur impulse. */}
+      <Show when={state.tab} keyed>
+        {(tab) => (
+          <div class="voidcode-inspector__body" role="tabpanel" data-tab={tab}>
+            {props.views[tab]}
+          </div>
+        )}
+      </Show>
     </aside>
   )
 }

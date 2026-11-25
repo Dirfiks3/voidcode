@@ -4,6 +4,7 @@ import { IconButton } from "@opencode/ui/icon-button"
 import { iconNames, type IconName } from "@opencode/ui/icons/provider"
 import { Menu } from "@opencode/ui/menu"
 import { ProviderIcon } from "@opencode/ui/provider-icon"
+import { ModelLogo } from "@opencode/ui/voidcode"
 import type { JSX } from "solid-js"
 import { createMemo, For, Match, Show, Switch } from "solid-js"
 import { consoleProviderGroup, consoleProviderName } from "@/providers/catalog/console"
@@ -24,7 +25,7 @@ function CustomManagedProviderIcon(props: { class?: string }) {
   return <img data-component="custom-managed-provider-icon" src={customManagedProvider} alt="" class={props.class} />
 }
 
-export function ProviderModelIcon(props: { provider: ModelProvider; class?: string }) {
+export function ProviderModelIcon(props: { provider: ModelProvider; modelID?: string; class?: string }) {
   // SAFETY: the cast only lets `includes` look up any string; the type guard narrows on the result.
   const icon = () =>
     [
@@ -37,6 +38,16 @@ export function ProviderModelIcon(props: { provider: ModelProvider; class?: stri
     <Switch>
       <Match when={props.provider.id === "opencode"}>
         <OpenCodeLogo class={`size-4 ${props.class ?? ""}`} />
+      </Match>
+      <Match when={props.modelID} keyed>
+        {(modelID) => (
+          <ModelLogo
+            providerID={props.provider.id}
+            modelID={modelID}
+            size={16}
+            class={`size-4 ${props.class ?? ""}`}
+          />
+        )}
       </Match>
       <Match when={icon()} keyed>
         {(id) => <ProviderIcon id={id} width={16} height={16} class={props.class} />}

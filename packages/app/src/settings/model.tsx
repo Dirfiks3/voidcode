@@ -106,6 +106,22 @@ const activitySchema = Persistence.struct({ placement: placementSchema, details:
 
 const placementOnlySchema = Persistence.struct({ placement: placementSchema })
 
+export const modelFallbackEntrySchema = Persistence.struct({
+  providerID: Schema.String,
+  modelID: Schema.String,
+  enabled: Schema.Boolean,
+})
+
+export type ModelFallbackEntry = typeof modelFallbackEntrySchema.Type
+
+export const defaultModelFallback: readonly ModelFallbackEntry[] = [
+  { providerID: "deepseek", modelID: "deepseek-chat", enabled: true },
+  { providerID: "minimax", modelID: "MiniMax-M2.7-highspeed", enabled: true },
+  { providerID: "opencode", modelID: "big-pickle", enabled: true },
+  { providerID: "alibaba", modelID: "qwen3.5-plus", enabled: true },
+  { providerID: "google", modelID: "gemini-2.5-pro", enabled: true },
+]
+
 const generalSchema = Persistence.struct({
   // Retired preferences without readers; kept so stored values still decode and round-trip.
   autoSave: Persistence.optional(Schema.Boolean),
@@ -145,6 +161,7 @@ const generalSchema = Persistence.struct({
   // Owned by the review plugin, which copies it out once; kept so settings rewrites cannot drop it first.
   mobileDiffWrap: Persistence.optional(Schema.Boolean),
   followUpBehavior: Schema.Literals(["queue", "steer"]),
+  modelFallback: Schema.optional(Schema.Array(modelFallbackEntrySchema)),
 })
 
 const appearanceSchema = Persistence.struct({
@@ -487,6 +504,10 @@ export const { use: useSettings, provider: SettingsProvider } = createSimpleCont
         followUpBehavior: withFallback(() => store.general?.followUpBehavior, defaultSettings.general.followUpBehavior),
         setFollowUpBehavior(value: FollowUpBehavior) {
           setStore("general", "followUpBehavior", value)
+        },
+        modelFallback: withFallback(() => store.general?.modelFallback, [...defaultModelFallback]),
+        setModelFallback(value: readonly ModelFallbackEntry[] | undefined) {
+          setStore("general", "modelFallback", value ? value.map((item) => ({ ...item })) : undefined)
         },
       },
       visibility: {

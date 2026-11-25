@@ -28,6 +28,7 @@ import { Icon } from "@opencode/ui/icon"
 import { IconButton } from "@opencode/ui/icon-button"
 import { Keybind } from "@opencode/ui/keybind"
 import { MenuScroll } from "@opencode/ui/menu-scroll"
+import { ModelLogo } from "@opencode/ui/voidcode"
 import { SearchHighlight, SearchList, type SearchListHandle, type SearchListRow } from "@opencode/ui/search-list"
 import { Tooltip } from "@opencode/ui/tooltip"
 import { TextInput } from "@opencode/ui/text-input"
@@ -214,7 +215,15 @@ const ModelList: Component<{
                     openDelay={0}
                     value={<ModelTooltip model={item} latest={item.latest} free={isFreeModel(item)} v2 />}
                   >
-                    <span class="min-w-0 truncate">{item.name}</span>
+                    <span class="flex min-w-0 items-center gap-1.5">
+                      <ModelLogo
+                        providerID={item.provider.id}
+                        modelID={item.id}
+                        size={16}
+                        class="shrink-0"
+                      />
+                      <span class="min-w-0 truncate">{item.name}</span>
+                    </span>
                   </Tooltip>
                   <Show when={isFreeModel(item)}>
                     <Badge class="shrink-0">{language.t("model.tag.free")}</Badge>
@@ -1142,6 +1151,12 @@ export function DialogSelectModel(props: { provider?: string; model?: ModelState
           </Show>
         </span>
         <span data-slot="model-dialog-name">
+          <ModelLogo
+            providerID={item().provider.id}
+            modelID={item().id}
+            size={16}
+            class="shrink-0"
+          />
           <span class="min-w-0 truncate">
             <SearchHighlight text={item().name} />
           </span>

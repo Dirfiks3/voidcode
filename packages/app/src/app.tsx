@@ -6,6 +6,7 @@ import { FileComponentProvider } from "@opencode/ui/context/file"
 import { installFocusRescue } from "@opencode/ui/context/focus-rescue"
 import { Font } from "@opencode/ui/font"
 import { ThemeProvider } from "@opencode/ui/theme/context"
+import { VoidcodeMotionFilter } from "@opencode/ui/voidcode"
 import { MetaProvider, Title } from "@solidjs/meta"
 import { type BaseRouterProps, Router } from "@solidjs/router"
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query"
@@ -95,6 +96,7 @@ export function AppBaseProviders(
                 <DialogProvider>
                   <PluginRoot>
                     <VoidcodeProvider>
+                      <VoidcodeMotionFilter />
                       <FileComponentProvider component={File}>
                         {props.children}
                         <HelloOverlay />

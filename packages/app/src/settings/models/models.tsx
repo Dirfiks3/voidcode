@@ -32,6 +32,7 @@ import {
   type ModelsRevealEvent,
 } from "./machine"
 
+import { ModelFallbackSettings } from "./fallback"
 import "@/settings/settings.css"
 
 type ModelItem = ReturnType<ReturnType<typeof useModels>["list"]>[number]
@@ -221,6 +222,13 @@ export const SettingsModels: Component<{
       </div>
 
       <div class="settings-tab-body settings-models">
+        <section class="flex flex-col gap-2 pb-6">
+          <div class="flex flex-col gap-1">
+            <h3 class="text-14-medium text-text-strong">{language.t("settings.models.fallback.title")}</h3>
+            <p class="text-12-regular text-text-weak">{language.t("settings.models.fallback.description")}</p>
+          </div>
+          <ModelFallbackSettings />
+        </section>
         <Show
           when={!list.grouped.loading}
           fallback={

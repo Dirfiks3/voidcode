@@ -1,0 +1,36 @@
+.voidcode-inspector__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.voidcode-inspector__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-weak-base);
+  background: var(--surface-base);
+  color: var(--text-weak);
+  font-family: var(--font-family-sans);
+  font-size: 12px;
+  line-height: var(--line-height-base);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 160ms var(--voidcode-spring), background-color 160ms var(--voidcode-spring),
+    color 160ms var(--voidcode-spring);
+}
+
+.voidcode-inspector__action:hover {
+  border-color: var(--border-base);
+  background: var(--surface-base-hover);
+  color: var(--text-strong);
+}
+
+.voidcode-inspector__action:focus-visible {
+  outline: 2px solid var(--accent-base, var(--border-interactive-focus));
+  outline-offset: 2px;
+}

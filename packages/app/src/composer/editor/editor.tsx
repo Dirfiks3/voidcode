@@ -91,6 +91,7 @@ export type ComposerEditorProps = {
   borderUnderlay?: boolean
   class?: string
   modelControl?: JSX.Element
+  effortControl?: JSX.Element
   modelControlsVisible?: boolean
   attachKeybind?: string[]
   attachShortcut?: string
@@ -511,6 +512,7 @@ export function ComposerEditor(props: ComposerEditorProps) {
               </Show>
               <Show when={props.modelControlsVisible ?? true}>
                 {props.modelControl}
+                {props.effortControl}
                 <Show when={view.variant} keyed>
                   {(control) => (
                     <Show when={control.options().length > 1}>

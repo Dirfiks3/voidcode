@@ -7,7 +7,7 @@ import { Icon } from "@opencode/ui/icon"
 import { Keybind } from "@opencode/ui/keybind"
 import { Slash } from "@opencode/ui/slash"
 import { Tooltip } from "@opencode/ui/tooltip"
-import { EffortSlider } from "@opencode/ui/voidcode"
+import { EffortPill, ModelLogo } from "@opencode/ui/voidcode"
 import { ComposerEditor } from "./editor/editor"
 import { DialogSelectModel, ModelSelectorDrawer } from "@/providers/models/select-dialog"
 import { DialogSelectModelUnpaid } from "@/providers/models/unpaid"
@@ -65,8 +65,7 @@ export function Composer(props: {
   }
 
   return (
-    <div class="flex flex-col gap-3">
-      <ComposerEditor
+    <ComposerEditor
         controller={props.model}
         borderUnderlay={props.borderUnderlay}
         readOnly={props.readOnly}
@@ -79,6 +78,9 @@ export function Composer(props: {
         queueFirstLabel={language.t("session.queue.first")}
         exitShellKeybind={[formatKeybind("esc", language.t)]}
         suggestionBoundary={props.suggestionBoundary}
+        effortControl={
+          <EffortPill selection={props.model.model.selection} sessionID={sessionID()} />
+        }
         modelControl={
           <ComposerModelControl
             loading={props.model.model.loading}
@@ -93,10 +95,6 @@ export function Composer(props: {
           />
         }
       />
-      <div data-voidcode-glass class="px-3 py-2">
-        <EffortSlider selection={props.model.model.selection} sessionID={sessionID()} />
-      </div>
-    </div>
   )
 }
 
@@ -170,6 +168,16 @@ function ComposerModelControl(props: {
 
   const content = () => (
     <>
+      <Show when={props.model.key()} keyed>
+        {(key) => (
+          <ModelLogo
+            providerID={key.providerID}
+            modelID={key.modelID}
+            size={16}
+            class="shrink-0"
+          />
+        )}
+      </Show>
       <span class="flex min-w-0 whitespace-nowrap leading-4">
         <Show when={props.label.provider}>
           {(name) => (

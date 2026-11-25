@@ -73,13 +73,34 @@ def squircle_mask(size: int, radius_ratio: float = 0.26) -> Image.Image:
     return mask.resize((size, size), Image.Resampling.LANCZOS)
 
 
+def crop_to_emblem(cleaned: Image.Image) -> Image.Image:
+    """Trim the dead obsidian field so the emblem reads clearly at taskbar size."""
+    gray = np.asarray(cleaned.convert("L"))
+    ys, xs = np.where(gray > 120)
+
+    if xs.size == 0:
+        return cleaned
+
+    width = int(xs.max() - xs.min()) + 1
+    height = int(ys.max() - ys.min()) + 1
+    side = int(max(width, height) * 1.08)
+    center_x = (int(xs.min()) + int(xs.max())) / 2
+    center_y = (int(ys.min()) + int(ys.max())) / 2
+    source_size = min(cleaned.size)
+    side = min(side, source_size)
+    left = int(max(0, min(center_x - side / 2, source_size - side)))
+    top = int(max(0, min(center_y - side / 2, source_size - side)))
+    return cleaned.crop((left, top, left + side, top + side))
+
+
 def gradient_tint(cleaned: Image.Image, size: int) -> Image.Image:
     """Turn the near-monochrome mark into a blue -> violet luminous emblem."""
     source = cleaned.convert("L").resize((size, size), Image.Resampling.LANCZOS)
     lum = np.asarray(source, dtype=np.float32) / 255.0
 
-    # Lift the faint strokes without flattening the bright core.
-    lum = np.power(lum, 0.78)
+    # Collapse near-black JPEG noise, then lift the light edges without flattening the core.
+    lum = np.clip((lum - 0.015) * 1.08, 0, 1)
+    lum = np.power(lum, 0.62)
 
     yy, xx = np.mgrid[0:size, 0:size].astype(np.float32)
     diagonal = np.clip((xx + yy) / (2 * size), 0, 1)
@@ -103,8 +124,8 @@ def compose(size: int, cleaned: Image.Image) -> Image.Image:
     canvas = Image.fromarray(np.clip(base, 0, 255).astype(np.uint8), mode="RGB").convert("RGBA")
 
     mark = gradient_tint(cleaned, size)
-    # Keep a deliberate breathing room around the artwork.
-    inset = round(size * 0.055)
+    # The source is already cropped; keep only enough room for the glass rim.
+    inset = round(size * 0.025)
     mark = mark.resize((size - 2 * inset, size - 2 * inset), Image.Resampling.LANCZOS)
     canvas.alpha_composite(mark, (inset, inset))
 
@@ -155,7 +176,7 @@ def main() -> None:
     if not SOURCE.exists():
         raise SystemExit(f"missing source artwork: {SOURCE}")
 
-    cleaned = remove_watermark(Image.open(SOURCE))
+    cleaned = crop_to_emblem(remove_watermark(Image.open(SOURCE)))
     cleaned.save(CLEANED)
 
     master = compose(1024, cleaned)
