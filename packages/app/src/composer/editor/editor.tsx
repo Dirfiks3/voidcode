@@ -515,7 +515,8 @@ export function ComposerEditor(props: ComposerEditorProps) {
                 {props.effortControl}
                 <Show when={view.variant} keyed>
                   {(control) => (
-                    <Show when={control.options().length > 1}>
+                    // The effort pill owns the reasoning level; the flat variant select would be a second control.
+                    <Show when={!props.effortControl && control.options().length > 1}>
                       <ComposerEditorConfiguredSelect
                         mobileDrawer
                         title={i18n.t("ui.promptInput.chooseVariant")}

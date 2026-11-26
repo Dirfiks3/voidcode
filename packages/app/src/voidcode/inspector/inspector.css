@@ -1,3 +1,15 @@
+/* Wider rhythm between the four Inspector tabs so adjacent labels never touch. */
+:root[data-theme="voidcode"] .voidcode-inspector .voidcode-inspector__tabs {
+  gap: 8px;
+  padding: 8px 12px;
+  margin-inline: 12px;
+}
+
+:root[data-theme="voidcode"] .voidcode-inspector .voidcode-inspector__indicator {
+  inset-block: 8px;
+  inset-inline-start: 12px;
+}
+
 .voidcode-inspector__actions {
   display: flex;
   flex-wrap: wrap;

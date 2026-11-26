@@ -234,8 +234,9 @@ function applyRoot(state: VoidcodePreferences) {
   root.dataset.voidcodePreset = state.liquidPreset
 
   const amoled = state.surface === "amoled"
-  root.style.setProperty("--voidcode-void", amoled ? "#000000" : "#0a0c10")
-  root.style.setProperty("--voidcode-panel", amoled ? "#030305" : "#11141c")
+  // Both surfaces stay on the Pure AMOLED ramp; graphite differs only in its raised cards and theme overrides.
+  root.style.setProperty("--voidcode-void", "#000000")
+  root.style.setProperty("--voidcode-panel", "#050507")
   root.style.setProperty("--voidcode-card", amoled ? "#08090c" : "#181c26")
 
   // Pure AMOLED is the theme's own ramp; let the active theme own those tokens. Graphite keeps its own inline steps.

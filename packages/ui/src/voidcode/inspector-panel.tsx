@@ -39,8 +39,9 @@ export const InspectorPanel: Component<{
         role="tablist"
         aria-label={i18n.t("ui.voidcode.inspector.title")}
         style={{
-          "--indicator-width": `${100 / TABS.length}%`,
-          "--indicator-x": `${index() * 100}%`,
+          // The tab strip has 12px side padding and 8px gaps; the indicator follows the same geometry.
+          "--indicator-width": `calc((100% - ${12 * 2 + 8 * (TABS.length - 1)}px) / ${TABS.length})`,
+          "--indicator-x": `calc(${index()} * (100% + 8px))`,
         }}
       >
         <span class="voidcode-inspector__indicator" aria-hidden="true" />

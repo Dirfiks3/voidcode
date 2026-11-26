@@ -12,7 +12,7 @@
   color-scheme: dark;
 
   --voidcode-void: #000000;
-  --voidcode-panel: #030305;
+  --voidcode-panel: #050507;
   --voidcode-card: #08090c;
   --voidcode-glass-border: rgba(255, 255, 255, 0.14);
   --voidcode-glass-highlight: rgba(255, 255, 255, 0.26);
@@ -277,12 +277,64 @@
   background-color: rgba(255, 255, 255, 0.06);
 }
 
-/* Reasoning effort lives in one toolbar pill; the editor itself never grows a panel. */
+/* Reasoning effort lives in one solid Liquid Glass pill; the editor never grows a panel. */
 :root[data-theme="voidcode"] .voidcode-effort-pill {
-  color: var(--v2-text-text-muted);
+  position: relative;
+  color: var(--v2-text-text-base);
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(120, 160, 255, 0.09) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.38),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.08),
+    0 6px 18px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
   font-size: 12px;
   font-weight: 520;
   white-space: nowrap;
+  transition:
+    background 220ms var(--voidcode-spring),
+    border-color 220ms var(--voidcode-spring),
+    box-shadow 220ms var(--voidcode-spring),
+    transform 180ms var(--voidcode-spring);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 45%);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort-pill:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.06) 55%,
+    rgba(120, 160, 255, 0.14) 100%
+  );
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.46),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.12),
+    0 8px 22px rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme="voidcode"] .voidcode-effort-pill:active {
+  transform: scale(0.98);
+  border-color: rgba(155, 114, 203, 0.4);
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(155, 114, 203, 0.1) 100%
+  );
 }
 
 :root[data-theme="voidcode"] .voidcode-effort-pill:disabled {
@@ -979,6 +1031,7 @@
 
   :root[data-theme="voidcode"]:not([data-voidcode-glass="false"]) [data-voidcode-glass],
   :root[data-theme="voidcode"] [data-voidcode-capsule],
+  :root[data-theme="voidcode"] .voidcode-effort-pill,
   :root[data-theme="voidcode"] .voidcode-effort__fill,
   :root[data-theme="voidcode"] .voidcode-effort__thumb,
   :root[data-theme="voidcode"] .voidcode-model-card,

@@ -2,6 +2,12 @@
 
 Release notes for OpenCode V2, newest first.
 
+## VoidCode v1.3.1 — 2026-11-26
+
+- Pure AMOLED is now the default surface on first launch, with `#000000` and `#050507` replacing the remaining blue-tinted fallbacks for the window, sidebar, center and Inspector.
+- The reasoning-effort pill is now a dimensional Liquid Glass control with refractive highlights and hover/press transitions; the duplicate flat variant selector was removed from the composer toolbar.
+- Inspector tabs now use an 8px gap with matching indicator geometry.
+
 ## VoidCode v1.3.0 — 2026-11-25
 
 - Restored the right-hand Inspector with four live tabs: Artifacts (code/file/report cards with copy, open and export), Plan (todos, progress and agent step capsules), Diffs (per-file `+/-` badges and collapsible patches) and Files (searchable workspace tree with preview). Opens from the titlebar button or Ctrl+I.
