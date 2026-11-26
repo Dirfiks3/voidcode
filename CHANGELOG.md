@@ -2,6 +2,11 @@
 
 Release notes for OpenCode V2, newest first.
 
+## VoidCode v2.0.1 — 2026-11-26
+
+- **First-run registration.** On first launch, VoidCode asks for your name so the workspace can greet you personally.
+- **iOS-style hello splash.** On every launch after setup, VoidCode shows a short animated greeting cycling through languages (`Hello, <name>`, `Hola, <name>`, `Привет, <name>`...) and finishes with “Ready to get to work?” / “Готовы ли вы к работе?” before fading into the workspace.
+
 ## VoidCode v2.0.0 — 2026-11-26
 
 - **Tauri v2 + Rust desktop shell.** VoidCode desktop migrated from Electron to a native Tauri v2 + Rust wrapper, keeping the existing VoidCode UI/features intact (Liquid Glass, Pure AMOLED, Antigravity Inspector, Smart Model Fallback Chain, local model logos, EffortPill, VoidCode Studio, Motion Blur, EN/RU).
