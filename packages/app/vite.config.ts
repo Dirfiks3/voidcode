@@ -44,6 +44,7 @@ const build: UserConfig["build"] = { assetsDir: "_assets", target: "esnext", sou
 if (process.env.VITE_OPENCODE_TEST_FIXTURES === "1") build.rolldownOptions = { input: testFixtureInput }
 
 export default defineConfig({
+  base: "./",
   // SAFETY: the plugins are typed against the different Vite versions their packages depend on, but all of them only
   // use hooks this Vite runs.
   plugins: [

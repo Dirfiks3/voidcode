@@ -47,6 +47,9 @@ export function createWebPlatform(version: string) {
 }
 
 function getCurrentServerUrl() {
+  const injected = getInjectedServerUrl()
+  if (injected) return injected
+
   if (import.meta.env.VITE_OPENCODE_SERVER_MODE === "none") return undefined
 
   if (import.meta.env.DEV) {
@@ -60,4 +63,15 @@ function getCurrentServerUrl() {
 
   // A build under a base path reaches the server through the same prefix.
   return location.origin + basePath
+}
+
+function getInjectedServerUrl() {
+  if (typeof window === "undefined") return undefined
+  const w = window as unknown as Record<string, unknown>
+  const opencode = w.__OPENCODE__ as Record<string, unknown> | undefined
+  const runtime = (opencode?.runtime ?? w.__OPENCODE_RUNTIME__) as Record<string, unknown> | undefined
+  const url = runtime?.serverUrl ?? opencode?.serverUrl
+  if (typeof url !== "string") return undefined
+  const value = url.trim().replace(/\/+$/, "")
+  return value || undefined
 }

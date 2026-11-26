@@ -2,6 +2,14 @@
 
 Release notes for OpenCode V2, newest first.
 
+## VoidCode v2.0.0 — 2026-11-26
+
+- **Tauri v2 + Rust desktop shell.** VoidCode desktop migrated from Electron to a native Tauri v2 + Rust wrapper, keeping the existing VoidCode UI/features intact (Liquid Glass, Pure AMOLED, Antigravity Inspector, Smart Model Fallback Chain, local model logos, EffortPill, VoidCode Studio, Motion Blur, EN/RU).
+- **Much smaller installer.** Windows NSIS installer is ~150 MB (down from ~281 MB Electron build) while bundling the same embedded `opencode-cli.exe` sidecar.
+- **Seamless local startup.** On launch, the app starts `opencode-cli.exe serve` invisibly on a free loopback port, waits for health, and injects the local server URL/auth bridge before SolidJS loads. Users land directly in the VoidCode workspace (no connect/pair/QR/password screen).
+- **Loading and cleanup.** Shows a short "Запуск локального ядра VoidCode..." loading screen only while the local core warms up. On close/Alt+F4/exit, Rust terminates the sidecar process tree (job object + `taskkill /F /T` fallback) to avoid orphan processes.
+- **Native window integration.** Frameless transparent window with dark acrylic vibrancy, drag/min/max/close controls, F12 devtools, and Tauri plugins for dialog/shell/fs/notification/clipboard.
+
 ## VoidCode v1.3.1 — 2026-11-26
 
 - Pure AMOLED is now the default surface on first launch, with `#000000` and `#050507` replacing the remaining blue-tinted fallbacks for the window, sidebar, center and Inspector.

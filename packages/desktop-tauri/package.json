@@ -1,0 +1,10 @@
+{
+  "name": "@voidcode/desktop-tauri",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "build:frontend": "bun run script/copy-frontend.mjs",
+    "tauri": "tauri"
+  }
+}

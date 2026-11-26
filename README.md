@@ -7,7 +7,7 @@
   <p>
     <img alt="Windows" src="https://img.shields.io/badge/Windows-x64-0078D6?style=flat-square&logo=windows">
     <img alt="License" src="https://img.shields.io/badge/license-MIT-8c7cff?style=flat-square">
-    <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-8c7cff?style=flat-square">
+    <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-8c7cff?style=flat-square">
   </p>
 </div>
 
@@ -15,8 +15,9 @@ VoidCode is a focused rebuild of the OpenCode desktop experience: a dark, distra
 
 ## Highlights
 
+- **Tauri v2 + Rust shell** — native desktop wrapper instead of Electron, with a much smaller Windows installer (~150 MB).
 - **Self-contained Windows build** — no Bun, Node.js, dev server, or batch files required.
-- **Embedded CLI** — `opencode-cli.exe` is auto-started from app resources on a free loopback port and stopped when VoidCode exits.
+- **Embedded CLI** — `opencode-cli.exe` is auto-started invisibly from app resources on a free loopback port and stopped when VoidCode exits.
 - **Liquid Glass** — saturation, inset highlights, volume shadows, wallpaper-aware blur, and native window translucency.
 - **Wallpapers** — Pure AMOLED, Obsidian Singularity, Cyber Mesh Grid, or your own image with dimming and blur.
 - **VoidCode Studio** — live theme preview, OpenCode JSON theme import/export, instant custom CSS with a kill switch, and shortcut editing.
@@ -34,7 +35,7 @@ Captured from the packaged Windows build.
 
 ## Download
 
-Grab the v1.1.0 installer from the [GitHub release](https://github.com/Dirfiks3/voidcode/releases/tag/v1.1.0):
+Grab the v2.0.0 installer from the [GitHub release](https://github.com/Dirfiks3/voidcode/releases/tag/v2.0.0):
 
 | Platform | File |
 | --- | --- |
@@ -44,11 +45,11 @@ Run it, then launch **VoidCode** from the Start menu. The background service sta
 
 ## What is inside
 
-- Electron desktop shell
-- SolidJS renderer
+- Tauri v2 + Rust native desktop shell
+- SolidJS renderer (VoidCode UI)
 - Standalone Bun-compiled Windows CLI, version `2.4.1`
-- Local RPC bridge with Basic auth bound to `127.0.0.1`
-- Native terminal and file-system integrations
+- Local loopback sidecar bridge bound to `127.0.0.1`
+- Native window vibrancy, dialogs, clipboard, notifications, and PTY integrations
 
 The app never asks you to pre-start a server on port `4096`. That path is development-only.
 
@@ -67,16 +68,24 @@ bun run typecheck:tsc
 bun test src             # in packages/desktop
 ```
 
-Build the standalone CLI, desktop bundle, and installer:
+Build the standalone CLI, frontend, and Tauri NSIS installer:
 
 ```bash
 cd packages/cli
 OPENCODE_TARGET=windows-x64-baseline OPENCODE_CHANNEL=latest OPENCODE_VERSION=2.4.1 \
   bun run script/build.ts --skip-install
 
-cd ../desktop
-OPENCODE_CHANNEL=prod OPENCODE_TARGET=windows-x64 OPENCODE_VERSION=1.1.0 bun run build
-OPENCODE_CHANNEL=prod OPENCODE_TARGET=windows-x64 OPENCODE_VERSION=1.1.0 bun run pack
+# copy CLI to Tauri sidecar location (target-triple name)
+cp dist/cli-windows-x64-baseline/bin/opencode.exe \
+  ../desktop-tauri/src-tauri/binaries/opencode-cli-x86_64-pc-windows-msvc.exe
+
+cd ../app
+VITE_OPENCODE_SERVER_MODE=none bun run build
+
+cd ../desktop-tauri
+bun run script/copy-frontend.mjs
+cd src-tauri
+cargo tauri build --bundles nsis
 ```
 
 ## Credits
