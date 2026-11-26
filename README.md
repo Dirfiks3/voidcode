@@ -7,7 +7,7 @@
   <p>
     <img alt="Windows" src="https://img.shields.io/badge/Windows-x64-0078D6?style=flat-square&logo=windows">
     <img alt="License" src="https://img.shields.io/badge/license-MIT-8c7cff?style=flat-square">
-    <img alt="Version" src="https://img.shields.io/badge/version-2.0.1-8c7cff?style=flat-square">
+    <img alt="Version" src="https://img.shields.io/badge/version-2.0.2-8c7cff?style=flat-square">
   </p>
 </div>
 
@@ -35,7 +35,7 @@ Captured from the packaged Windows build.
 
 ## Download
 
-Grab the v2.0.1 installer from the [GitHub release](https://github.com/Dirfiks3/voidcode/releases/tag/v2.0.1):
+Grab the v2.0.2 installer from the [GitHub release](https://github.com/Dirfiks3/voidcode/releases/tag/v2.0.2):
 
 | Platform | File |
 | --- | --- |

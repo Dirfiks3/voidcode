@@ -2,6 +2,10 @@
 
 Release notes for OpenCode V2, newest first.
 
+## VoidCode v2.0.2 — 2026-11-26
+
+- **Inspector theme polish.** Inspector now follows the active theme in all themes (not only VoidCode), with AMOLED-friendly dark surfaces, liquid-glass blur/translucency, and smoother motion-blur appearance/tab transitions.
+
 ## VoidCode v2.0.1 — 2026-11-26
 
 - **First-run registration.** On first launch, VoidCode asks for your name so the workspace can greet you personally.
